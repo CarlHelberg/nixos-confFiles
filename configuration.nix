@@ -20,13 +20,6 @@
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  powerManagement = {
-    resumeCommands = "
-       sh /bin/restart-gdm.sh
-    ";
-    enable = true;
-  };
-
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -49,9 +42,6 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
   
-  # compositor
-  services.picom.enable = false;
-
   # Configure keymap in X11
   services.xserver = {
     layout = "za";
@@ -80,10 +70,6 @@
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  security.sudo.configFile = "
-   Cmnd_Alias GDMRST = /bin/restart-gdm.sh
-   carl ALL=NOPASSWD:/bin/restart-gdm.sh
-   ";
 
   services.pipewire = {
     enable = true;
@@ -107,6 +93,7 @@
     description = "Carl";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
+    #  thunderbird
        anydesk
     ];
   };
@@ -208,7 +195,16 @@ users.defaultUserShell = pkgs.zsh;
     winetricks
 
     # native wayland support (unstable)
-    wineWowPackages.waylandFull];
+    wineWowPackages.waylandFull
+  ];
+
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
 
   # List services that you want to enable:
 
@@ -232,6 +228,4 @@ users.defaultUserShell = pkgs.zsh;
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
 
-
 }
-
