@@ -20,6 +20,13 @@
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
+  powerManagement = {
+    resumeCommands = "
+       sh /home/carl/restart-gdm.sh
+    ";
+    enable = true;
+  };
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -68,6 +75,11 @@
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
+  security.sudo.configFile = "
+   Cmnd_Alias GDMRST = /home/carl/restart-gdm.sh
+   carl ALL=(ALL) ALL, !GDMRST
+   ";
+
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -163,6 +175,8 @@ users.defaultUserShell = pkgs.zsh;
     gnomeExtensions.vitals
     clojure-lsp
     clojure
+    libreoffice
+
    #WINE
    # support both 32- and 64-bit applications
     wineWowPackages.stable
