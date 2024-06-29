@@ -45,6 +45,7 @@
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
+
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
   
@@ -116,14 +117,18 @@
   
   # Install tailscale
   services.tailscale.enable = true;
- 
+
+  programs.dconf = {
+	 enable = true; 
+  };
+
   # Install 1pass
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;
     # Certain features, including CLI integration and system authentication support,
     # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-    polkitPolicyOwners = [ "andre" ];
+    polkitPolicyOwners = [ "carl" ];
   };
 
   # Install zsh
@@ -175,10 +180,12 @@ users.defaultUserShell = pkgs.zsh;
     slack
     jetbrains.idea-community
     gitui
-    gnomeExtensions.vitals
     clojure-lsp
     clojure
     libreoffice
+    gnomeExtensions.notification-timeout
+    gnomeExtensions.system-monitor
+    dconf
 
    #WINE
    # support both 32- and 64-bit applications
@@ -224,4 +231,6 @@ users.defaultUserShell = pkgs.zsh;
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
 
+
 }
+
