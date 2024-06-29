@@ -185,7 +185,7 @@ users.defaultUserShell = pkgs.zsh;
     libreoffice
     gnomeExtensions.notification-timeout
     gnomeExtensions.system-monitor
-    gnomeExtensions.notification-timeout
+    gnomeExtensions.notification-banner-position
     dconf
 
    #WINE
