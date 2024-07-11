@@ -16,6 +16,9 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  virtualisation.virtualbox.host.enable = true;
+  nixpkgs.config.virtualbox.enableExtensionPack = true;
+
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -26,6 +29,13 @@
   
   # Enable networking
   networking.networkmanager.enable = true;
+<<<<<<< HEAD
+=======
+  networking.extraHosts =
+  ''
+    127.0.0.1 pve
+  '';
+>>>>>>> 49c94be (latest fixes)
   systemd.services.NetworkManager-wait-online.enable = false;
 
   # Set your time zone.
@@ -42,6 +52,9 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
   
+  # compositor
+  services.picom.enable = false;
+
   # Configure keymap in X11
   services.xserver = {
     layout = "za";
@@ -70,6 +83,13 @@
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
+<<<<<<< HEAD
+=======
+  security.sudo.configFile = "
+   Cmnd_Alias GDMRST = /bin/restart-gdm.sh
+   carl ALL=NOPASSWD:/bin/restart-gdm.sh
+   ";
+>>>>>>> 49c94be (latest fixes)
 
   services.pipewire = {
     enable = true;
@@ -91,9 +111,8 @@
   users.users.carl = {
     isNormalUser = true;
     description = "Carl";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers"];
     packages = with pkgs; [
-    #  thunderbird
        anydesk
     ];
   };
@@ -140,6 +159,7 @@
 
 users.defaultUserShell = pkgs.zsh;
 
+
   # Install steam
   programs.steam = {
    enable = true;
@@ -151,11 +171,22 @@ users.defaultUserShell = pkgs.zsh;
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = true; 
   nixpkgs.config.nvidia.acceptLicense = true;
+	
+#packer = {
+#		enable = true ;
+#		required_plugins = {
+#        virtualbox = {
+#          version = "~> 1";
+#          source  = "github.com/hashicorp/virtualbox";
+#        };
+#    };
+#};
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
    # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+<<<<<<< HEAD
     wget
     qemu
     neovim
@@ -174,6 +205,32 @@ users.defaultUserShell = pkgs.zsh;
     gnomeExtensions.system-monitor
     gnomeExtensions.notification-banner-position
     dconf
+=======
+	wget
+	qemu
+	neovim
+	docker
+	curl
+	git
+	zsh
+	anydesk
+	slack
+	jetbrains.idea-community
+	gitui
+	clojure-lsp
+	clojure
+	libreoffice
+	gnomeExtensions.notification-timeout
+	gnomeExtensions.system-monitor
+	gnomeExtensions.notification-banner-reloaded
+	dconf
+	home-manager
+	packer
+	vagrant
+	docker-compose
+	python3
+	kitty
+>>>>>>> 49c94be (latest fixes)
 
    #WINE
    # support both 32- and 64-bit applications
@@ -195,6 +252,7 @@ users.defaultUserShell = pkgs.zsh;
     winetricks
 
     # native wayland support (unstable)
+<<<<<<< HEAD
     wineWowPackages.waylandFull
   ];
 
@@ -205,6 +263,9 @@ users.defaultUserShell = pkgs.zsh;
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+=======
+    wineWowPackages.waylandFull];
+>>>>>>> 49c94be (latest fixes)
 
   # List services that you want to enable:
 
@@ -228,4 +289,6 @@ users.defaultUserShell = pkgs.zsh;
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
 
+
 }
+
