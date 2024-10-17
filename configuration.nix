@@ -17,23 +17,37 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   virtualisation.virtualbox.host.enable = true;
-  nixpkgs.config.virtualbox.enableExtensionPack = true;
-
+  nixpkgs.config.virtualbox.host.enableExtensionPack = true;
+  virtualisation.virtualbox.guest.enable = true;
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+networking = {
+    networkmanager.enable = true;
+    #nftables.enable = true;
 
+    firewall = {
+      enable = true;
+
+      allowedTCPPorts = [ 5900  5901  5902 4320 ];
+      extraInputRules = ''
+        # allow from docker nets to host
+        #ip saddr 172.0.0.0/8 accept
+      '';
+    };
+  };
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
   
   # Enable networking
-  networking.networkmanager.enable = true;
 <<<<<<< HEAD
 =======
+#  networking.networkmanager.enable = true;
   networking.extraHosts =
   ''
-    127.0.0.1 pve
+	127.0.0.1 pve
+	127.0.0.1 datomic
   '';
 >>>>>>> 49c94be (latest fixes)
   systemd.services.NetworkManager-wait-online.enable = false;
@@ -51,14 +65,20 @@
 
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.displayManager.gdm.wayland = false;
   
   # compositor
   services.picom.enable = false;
 
+
+	# SHEBANGS IN SH SCRIPTS ARE A NIGHTMARE!
+	services.envfs.enable = true;
+
+
   # Configure keymap in X11
   services.xserver = {
-    layout = "za";
-    xkbVariant = "";
+    xkb.layout = "za";
+    xkb.variant = "";
   };
 
   fonts.fontconfig.antialias = true;
@@ -85,6 +105,7 @@
   security.rtkit.enable = true;
 <<<<<<< HEAD
 =======
+
   security.sudo.configFile = "
    Cmnd_Alias GDMRST = /bin/restart-gdm.sh
    carl ALL=NOPASSWD:/bin/restart-gdm.sh
@@ -114,6 +135,10 @@
     extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers"];
     packages = with pkgs; [
        anydesk
+    	(wineWowPackages.full.override {
+     	wineRelease = "staging";
+     	mingwSupport = true;
+   	})
     ];
   };
 
@@ -219,6 +244,8 @@ users.defaultUserShell = pkgs.zsh;
 	gitui
 	clojure-lsp
 	clojure
+	leiningen
+	cljfmt
 	libreoffice
 	gnomeExtensions.notification-timeout
 	gnomeExtensions.system-monitor
@@ -229,8 +256,13 @@ users.defaultUserShell = pkgs.zsh;
 	vagrant
 	docker-compose
 	python3
-	kitty
 >>>>>>> 49c94be (latest fixes)
+	jetbrains.gateway
+	jetbrains.clion
+	jetbrains-toolbox
+	#turbovnc
+	x11vnc
+	OVMFFull
 
    #WINE
    # support both 32- and 64-bit applications
@@ -291,4 +323,3 @@ users.defaultUserShell = pkgs.zsh;
 
 
 }
-
