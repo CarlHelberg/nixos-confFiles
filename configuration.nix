@@ -5,320 +5,254 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./nvidia.nix
-    ];
+    imports =
+        [ # Include the results of the hardware scan.
+          ./hardware-configuration.nix
+          ./nvidia.nix
+        ];
 
-  nix.settings.experimental-features = [ "flakes" "nix-command" ];
+    nix.settings.experimental-features = [ "flakes" "nix-command" ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  virtualisation.virtualbox.host.enable = true;
-  nixpkgs.config.virtualbox.host.enableExtensionPack = true;
-  virtualisation.virtualbox.guest.enable = true;
+    # Bootloader.
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
+    virtualisation.virtualbox.host.enable = true;
+    nixpkgs.config.virtualbox.host.enableExtensionPack = true;
+    virtualisation.virtualbox.guest.enable = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-networking = {
-    networkmanager.enable = true;
-    #nftables.enable = true;
+    networking.hostName = "nixos"; # Define your hostname.
+    # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+    networking = {
+        networkmanager.enable = true;
+        firewall = {
+            enable = true;
+            allowedTCPPorts = [ 5900  5901  5902 4320 ];
+            extraInputRules = '' '';
 
-    firewall = {
-      enable = true;
-
-      allowedTCPPorts = [ 5900  5901  5902 4320 ];
-      extraInputRules = ''
-        # allow from docker nets to host
-        #ip saddr 172.0.0.0/8 accept
-      '';
+        };
     };
-  };
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
   
-  # Enable networking
-<<<<<<< HEAD
-=======
-#  networking.networkmanager.enable = true;
-  networking.extraHosts =
-  ''
-	127.0.0.1 pve
-	127.0.0.1 datomic
-  '';
->>>>>>> 49c94be (latest fixes)
-  systemd.services.NetworkManager-wait-online.enable = false;
+# Enable networking
+    # networking.networkmanager.enable = true;
+    networking.extraHosts =
+        ''
+        127.0.0.1 pve
+        127.0.0.1 datomic
+        '';
+    systemd.services.NetworkManager-wait-online.enable = false;
 
-  # Set your time zone.
+# Set your time zone.
   time.timeZone = "Africa/Johannesburg";
 
-  # Select internationalisation properties.
+# Select internationalisation properties.
   i18n.defaultLocale = "en_ZA.UTF-8";
 
-  # Enable the X11 windowing system.
+# Enable the X11 windowing system.
   services.xserver.enable = true;
 
-  # Enable the GNOME Desktop Environment.
+# Enable the GNOME Desktop Environment.
 
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
   services.xserver.displayManager.gdm.wayland = false;
   
-  # compositor
-  services.picom.enable = false;
+# compositor
+    services.picom.enable = false;
 
 
-	# SHEBANGS IN SH SCRIPTS ARE A NIGHTMARE!
+# SHEBANGS IN SH SCRIPTS ARE A NIGHTMARE!
 	services.envfs.enable = true;
 
 
-  # Configure keymap in X11
-  services.xserver = {
+# Configure keymap in X11
+    services.xserver = {
     xkb.layout = "za";
     xkb.variant = "";
-  };
+    };
 
-  fonts.fontconfig.antialias = true;
-  fonts.packages = with pkgs; [
-    # https://nixos.wiki/wiki/Fonts
-    (nerdfonts.override { fonts = [ "FiraCode" "SourceCodePro" ]; })
-     fira
-     fira-code
-     roboto
-     libertine
-     source-serif-pro
-     stix-two
-     vistafonts
+    fonts.fontconfig.antialias = true;
+    fonts.packages = with pkgs; [
+        # https://nixos.wiki/wiki/Fonts
+        (nerdfonts.override { fonts = [ "FiraCode" "SourceCodePro" ]; })
+         fira
+         fira-code
+         roboto
+         libertine
+         source-serif-pro
+         stix-two
+         vistafonts
     ];
 
-  # Virtualisation
-  virtualisation.docker.enable = true;
+# Virtualisation
+    virtualisation.docker.enable = true;
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
+# Enable CUPS to print documents.
+    services.printing.enable = true;
 
-  # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-<<<<<<< HEAD
-=======
+# Enable sound with pipewire.
+    hardware.pulseaudio.enable = false;
+    security.rtkit.enable = true;
 
-  security.sudo.configFile = "
-   Cmnd_Alias GDMRST = /bin/restart-gdm.sh
-   carl ALL=NOPASSWD:/bin/restart-gdm.sh
-   ";
->>>>>>> 49c94be (latest fixes)
+    security.sudo.configFile = "
+        Cmnd_Alias GDMRST = /bin/restart-gdm.sh
+        carl ALL=NOPASSWD:/bin/restart-gdm.sh
+    ";
 
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    services.pipewire = {
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+        # If you want to use JACK applications, uncomment this
+        #jack.enable = true;
 
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
+        # use the example session manager (no others are packaged yet so this is enabled by default,
+        # no need to redefine it in your config for now)
+        #media-session.enable = true;
+    };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+# Enable touchpad support (enabled default in most desktopManager).
+    # services.xserver.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.carl = {
-    isNormalUser = true;
-    description = "Carl";
-    extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers"];
-    packages = with pkgs; [
-       anydesk
-    	(wineWowPackages.full.override {
-     	wineRelease = "staging";
-     	mingwSupport = true;
-   	})
-    ];
-  };
+# Define a user account. Don't forget to set a password with ‘passwd’.
+    users.users.carl = {
+        isNormalUser = true;
+        description = "Carl";
+        extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers"];
+        packages = with pkgs; [
+            anydesk
+            (wineWowPackages.full.override {
+                wineRelease = "staging";
+                mingwSupport = true;
+            })
+        ];
+    };
 
 # +++++++++++++++++++++ PROGRAMS ++++++++++++++++++++++++++++++++++++
-  # Install firefox.
-  programs.firefox.enable = true;
+# Install firefox.
+    programs.firefox.enable = true;
   
-  # Install tailscale
-  services.tailscale.enable = true;
+# Install tailscale
+    services.tailscale.enable = true;
 
-  programs.dconf = {
-	 enable = true; 
-  };
+    programs.dconf = {
+        enable = true;
+    };
 
-  # Install 1pass
-  programs._1password.enable = true;
-  programs._1password-gui = {
-    enable = true;
-    # Certain features, including CLI integration and system authentication support,
-    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-    polkitPolicyOwners = [ "carl" ];
-  };
+# Install 1pass
+    programs._1password.enable = true;
+    programs._1password-gui = {
+        enable = true;
+        # Certain features, including CLI integration and system authentication support,
+        # require enabling PolKit integration on some desktop environments (e.g. Plasma).
+        polkitPolicyOwners = [ "carl" ];
+    };
 
-  # Install zsh
-  programs.zsh = {
-      enable = true;
-      autosuggestions.enable = true;
-      zsh-autoenv.enable = true;
-      syntaxHighlighting.enable = true;
-      ohMyZsh = {
-         enable = true;
-         theme = "af-magic";
-         plugins = [
-           "git"
-           "npm"
-           "history"
-           "node"
-           "rust"
-           "deno"
-         ];
-      };
-   };
+    # Install zsh
+    programs.zsh = {
+        enable = true;
+        autosuggestions.enable = true;
+        zsh-autoenv.enable = true;
+        syntaxHighlighting.enable = true;
+        ohMyZsh = {
+            enable = true;
+            theme = "af-magic";
+            plugins = [
+                "git"
+                "npm"
+                "history"
+                "node"
+                "rust"
+                "deno"
+            ];
+        };
+    };
 
-users.defaultUserShell = pkgs.zsh;
+# Set Default Shell
+    users.defaultUserShell = pkgs.zsh;
 
 
-  # Install steam
-  programs.steam = {
-   enable = true;
-   remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  };
+# Install steam
+    programs.steam = {
+        enable = true;
+        remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+        dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    };
   
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.allowBroken = true; 
-  nixpkgs.config.nvidia.acceptLicense = true;
-	
-#packer = {
-#		enable = true ;
-#		required_plugins = {
-#        virtualbox = {
-#          version = "~> 1";
-#          source  = "github.com/hashicorp/virtualbox";
-#        };
-#    };
-#};
+# Allow unfree packages
+    nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.allowBroken = true;
+    nixpkgs.config.nvidia.acceptLicense = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-   # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-<<<<<<< HEAD
-    wget
-    qemu
-    neovim
-    docker
-    curl
-    git
-    zsh
-    anydesk
-    slack
-    jetbrains.idea-community
-    gitui
-    clojure-lsp
-    clojure
-    libreoffice
-    gnomeExtensions.notification-timeout
-    gnomeExtensions.system-monitor
-    gnomeExtensions.notification-banner-position
-    dconf
-=======
-	wget
-	qemu
-	neovim
-	docker
-	curl
-	git
-	zsh
-	anydesk
-	slack
-	jetbrains.idea-community
-	gitui
-	clojure-lsp
-	clojure
-	leiningen
-	cljfmt
-	libreoffice
-	gnomeExtensions.notification-timeout
-	gnomeExtensions.system-monitor
-	gnomeExtensions.notification-banner-reloaded
-	dconf
-	home-manager
-	packer
-	vagrant
-	docker-compose
-	python3
->>>>>>> 49c94be (latest fixes)
-	jetbrains.gateway
-	jetbrains.clion
-	jetbrains-toolbox
-	#turbovnc
-	x11vnc
-	OVMFFull
 
-   #WINE
-   # support both 32- and 64-bit applications
-    wineWowPackages.stable
+# List packages installed in system profile. To search, run:
+# $ nix search wget
 
-    # support 32-bit only
-    #wine
+    environment.systemPackages = with pkgs; [
+        wget
+        qemu
+        neovim
+        docker
+        curl
+        git
+        zsh
+        anydesk
+        slack
+        jetbrains.idea-community
+        gitui
+        clojure-lsp
+        clojure
+        leiningen
+        cljfmt
+        libreoffice
+        gnomeExtensions.notification-timeout
+        gnomeExtensions.system-monitor
+        gnomeExtensions.notification-banner-reloaded
+        dconf
+        home-manager
+        packer
+        vagrant
+        docker-compose
+        python3
+        jetbrains.gateway
+        jetbrains.clion
+        jetbrains-toolbox
+        #turbovnc
+        x11vnc
+        OVMFFull
 
-    # support 64-bit only
-    (wine.override { wineBuild = "wine64"; })
+#WINE
+# support both 32- and 64-bit applications
+        wineWowPackages.stable
 
-    # support 64-bit only
-    wine64
+# support 32-bit only
+        #wine
 
-    # wine-staging (version with experimental features)
-    wineWowPackages.staging
+# support 64-bit only
+        (wine.override { wineBuild = "wine64"; })
 
-    # winetricks (all versions)
-    winetricks
+# support 64-bit only
+        wine64
 
-    # native wayland support (unstable)
-<<<<<<< HEAD
-    wineWowPackages.waylandFull
-  ];
+# wine-staging (version with experimental features)
+        wineWowPackages.staging
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-=======
-    wineWowPackages.waylandFull];
->>>>>>> 49c94be (latest fixes)
+# winetricks (all versions)
+        winetricks
 
-  # List services that you want to enable:
+# native wayland support (unstable)
+        wineWowPackages.waylandFull
 
-  # Enable the OpenSSH daemon.
-   services.openssh = {
+  ]; # END OF SYSTEM PACKAGES
+
+# List services that you want to enable:
+
+# Enable the OpenSSH daemon.
+    services.openssh = {
       enable = true;
       settings.PasswordAuthentication = false;
     };
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
 
 
