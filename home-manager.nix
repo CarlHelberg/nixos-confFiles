@@ -18,7 +18,6 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
-    pkgs.asdf-vm
     pkgs.htop
     # git tools
     pkgs.git
@@ -54,7 +53,6 @@
     #pkgs.jq
     #pkgs.oxker
     #pkgs.gcc
-    #pkgs.asdf-vm
 
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
