@@ -99,11 +99,6 @@
     hardware.pulseaudio.enable = false;
     security.rtkit.enable = true;
 
-    security.sudo.configFile = "
-        Cmnd_Alias GDMRST = /bin/restart-gdm.sh
-        carl ALL=NOPASSWD:/bin/restart-gdm.sh
-    ";
-
     services.pipewire = {
         enable = true;
         alsa.enable = true;
