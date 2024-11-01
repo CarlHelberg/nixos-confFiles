@@ -26,7 +26,7 @@
         networkmanager.enable = true;
         firewall = {
             enable = true;
-            allowedTCPPorts = [ 5900  5901  5902 4320 ];
+            allowedTCPPorts = [ 5900  5901  5902 9993 ];
             extraInputRules = '' '';
 
         };
@@ -40,6 +40,12 @@
         127.0.0.1 datomic
         '';
     systemd.services.NetworkManager-wait-online.enable = false;
+
+	services.zerotierone = {
+		enable = true;
+		joinNetworks = ["a0cbf4b62a040cc1"];
+		port = 9993;
+	};
 
 # Set your time zone.
   time.timeZone = "Africa/Johannesburg";
