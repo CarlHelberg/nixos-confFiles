@@ -23,14 +23,15 @@
     networking.hostName = "nixos"; # Define your hostname.
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     networking = {
-        networkmanager.enable = true;
-        firewall = {
-            enable = true;
-            allowedTCPPorts = [ 5900  5901  5902 9993 ];
-            extraInputRules = '' '';
+        
+	networkmanager.enable = true;
+		#firewall = {
+		#	enable = true;
+		#	allowedTCPPorts = [ 5900  5901  5902 9993 ];
+		#	extraInputRules = '' '';
 
-        };
-    };
+		#};
+	};
   
 # Enable networking
     # networking.networkmanager.enable = true;
