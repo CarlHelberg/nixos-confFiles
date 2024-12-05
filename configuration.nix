@@ -13,6 +13,7 @@
 
     nix.settings.experimental-features = [ "flakes" "nix-command" ];
 
+
     # Bootloader.
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
@@ -32,6 +33,14 @@
 
 		#};
 	};
+
+	programs.nix-ld.enable = true;
+
+	programs.nix-ld.libraries = with pkgs; [
+		# Add any missing dynamic libraries for unpackaged programs
+		# here, NOT in environment.systemPackages
+		cypress
+	];
   
 # Enable networking
     # networking.networkmanager.enable = true;
@@ -42,11 +51,6 @@
         '';
     systemd.services.NetworkManager-wait-online.enable = false;
 
-	services.zerotierone = {
-		enable = true;
-		joinNetworks = ["a0cbf4b62a040cc1"];
-		port = 9993;
-	};
 
 # Set your time zone.
   time.timeZone = "Africa/Johannesburg";
@@ -73,21 +77,17 @@
 
 # Configure keymap in X11
     services.xserver = {
-    xkb.layout = "za";
+    xkb.layout = "us";
     xkb.variant = "";
     };
 
     fonts.fontconfig.antialias = true;
     fonts.packages = with pkgs; [
         # https://nixos.wiki/wiki/Fonts
-        (nerdfonts.override { fonts = [ "FiraCode" "SourceCodePro" ]; })
-         fira
-         fira-code
-         roboto
-         libertine
-         source-serif-pro
-         stix-two
-         vistafonts
+        #(nerd-fonts.override { fonts = [ "nerd-fonts.fira-code" "nerd-fonts.source-code-pro" ]; })
+         nerd-fonts.fira-mono
+         nerd-fonts.fira-code
+         nerd-fonts.roboto-mono
     ];
 
 # Virtualisation
