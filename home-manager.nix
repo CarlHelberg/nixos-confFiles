@@ -24,8 +24,6 @@
     pkgs.gitui
 
     pkgs.packer
-    pkgs.nomad
-    pkgs.vagrant
 
     # network tools
     pkgs.mtr

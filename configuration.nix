@@ -150,6 +150,7 @@
         polkitPolicyOwners = [ "carl" ];
     };
 
+
     # Install zsh
     programs.zsh = {
         enable = true;
@@ -187,6 +188,7 @@
     nixpkgs.config.nvidia.acceptLicense = true;
 
 
+
 # List packages installed in system profile. To search, run:
 # $ nix search wget
 
@@ -210,18 +212,29 @@
         gnomeExtensions.notification-timeout
         gnomeExtensions.system-monitor
         gnomeExtensions.notification-banner-reloaded
-        dconf
+	dconf
         home-manager
         packer
-        vagrant
+        #vagrant
         docker-compose
         python3
         jetbrains.gateway
         jetbrains.clion
         jetbrains-toolbox
-        #turbovnc
         x11vnc
         OVMFFull
+	clockify
+	nodejs_22
+	insomnia
+	rustc
+	cargo
+	maven
+	yarn
+	cider
+	torrential
+	
+	#lastapp
+		
 
 #WINE
 # support both 32- and 64-bit applications
@@ -250,11 +263,14 @@
 # List services that you want to enable:
 
 # Enable the OpenSSH daemon.
-    services.openssh = {
-      enable = true;
-      settings.PasswordAuthentication = false;
-    };
 
+    
+	services.openssh = {
+		enable = true;
+		ports = [22];
+		settings.PasswordAuthentication = false;
+	};
+	
   system.stateVersion = "24.05"; # Did you read the comment?
 
 
